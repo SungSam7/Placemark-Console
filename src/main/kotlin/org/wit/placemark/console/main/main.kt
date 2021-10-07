@@ -32,6 +32,7 @@ fun main(args: Array<String>)
             1 -> addPlacemark()
             2 -> updatePlacemark()
             3 -> listAllPlacemarks()
+            4 -> getId()
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
         }
@@ -51,6 +52,7 @@ fun menu() : Int {
     println("1. Add Placemark")
     println("2. Update Placemark")
     println("3. List all of the Placemarks")
+    println("4. Search by Id")
     println("-1. Exit")
     println()
     print("Enter an integer : ")
@@ -68,7 +70,7 @@ fun menu() : Int {
 fun addPlacemark(){
 
 
-
+    placemark.id++
     println("Add a placemark")
     println()
     print("Enter a title: ")
@@ -118,3 +120,29 @@ fun listAllPlacemarks() {
         logger.info("${it}")
     }
 }
+
+fun getId(): Long{
+    var strId : String?
+    var searchId : Long
+    print("Enter id to Search/Update: ")
+    strId = readLine()!!
+    searchId = if(strId.toLongOrNull() != null && !strId.isEmpty())
+        strId.toLong()
+    else
+        -9
+    return searchId
+
+}
+
+
+fun search(id: Long) : PlacemarkModel? {
+    var foundPlacemark: PlacemarkModel? = placemarks.find { p -> p.id == id }
+    return foundPlacemark
+
+    println("Test: "+foundPlacemark)
+}
+
+//fun displaySearch(foundPlacemark: String)
+//{
+//
+//}
