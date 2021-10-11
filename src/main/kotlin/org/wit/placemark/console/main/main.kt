@@ -16,6 +16,7 @@ var description = ""
 
 fun main(args: Array<String>)
 {
+    dummyData()
     logger.info { "Launching Placemark Console App" }
 
 
@@ -32,7 +33,7 @@ fun main(args: Array<String>)
             1 -> addPlacemark()
             2 -> updatePlacemark()
             3 -> listAllPlacemarks()
-            4 -> getId()
+            4 -> searchPlacemark()
             -1 -> println("Exiting App")
             else -> println("Invalid Option")
         }
@@ -97,19 +98,34 @@ fun addPlacemark(){
 
 
 fun updatePlacemark() {
-    println()
     println("Update Placemark")
     println()
-    print("Enter a new title for "+ placemark.title+": ")
-    title = readLine()!!
+    listAllPlacemarks()
+    var searchId = getId()
+    val aPlacemark = search(searchId)
+    var tempTitle : String?
+    var tempDescription : String?
 
-    println()
-    print("Enter a new description for "+placemark.description+": ")
-    description = readLine()!!
-    println("You entered "+placemark.title+" for title and "+placemark.description+" for the description")
+    if(aPlacemark != null) {
+        print("Enter a new Title for [ " + aPlacemark.title + " ] : ")
+        tempTitle = readLine()!!
+        print("Enter a new Description for [ " + aPlacemark.description + " ] : ")
+        tempDescription = readLine()!!
 
+        if (!tempTitle.isNullOrEmpty() && !tempDescription.isNullOrEmpty()) {
+            aPlacemark.title = tempTitle
+            aPlacemark.description = tempDescription
+            println(
+                "You updated [ " + aPlacemark.title + " ] for title " +
+                        "and [ " + aPlacemark.description + " ] for description")
+            logger.info("Placemark Updated : [ $aPlacemark ]")
+        }
+        else
+            logger.info("Placemark Not Updated")
     }
-
+    else
+        println("Placemark Not Updated...")
+}
 
 
 
@@ -119,6 +135,7 @@ fun listAllPlacemarks() {
     placemarks.forEach {
         logger.info("${it}")
     }
+    println()
 }
 
 fun getId(): Long{
@@ -138,11 +155,22 @@ fun getId(): Long{
 fun search(id: Long) : PlacemarkModel? {
     var foundPlacemark: PlacemarkModel? = placemarks.find { p -> p.id == id }
     return foundPlacemark
-
-    println("Test: "+foundPlacemark)
 }
 
-//fun displaySearch(foundPlacemark: String)
-//{
-//
-//}
+fun searchPlacemark() {
+
+    var searchId = getId()
+    val aPlacemark = search(searchId)
+
+    if(aPlacemark != null)
+        println("Placemark Details [ $aPlacemark ]")
+    else
+        println("Placemark Not Found...")
+}
+
+
+fun dummyData() {
+    placemarks.add(PlacemarkModel(1, "Dungarvan", "A town in the West of Waterford."))
+    placemarks.add(PlacemarkModel(2, "Abbeyside", "A village connected to Dungarvan."))
+    placemarks.add(PlacemarkModel(3, "Ballinroad", "A suburb of the Dungarvan area."))
+}
