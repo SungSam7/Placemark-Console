@@ -1,28 +1,37 @@
 package org.wit.placemark.console.controllers
 
 import mu.KotlinLogging
-import org.wit.placemark.console.main.controller
+import org.wit.placemark.console.models.PlacemarkJSONStore
+
+
 import org.wit.placemark.console.models.PlacemarkMemStore
 import org.wit.placemark.console.models.PlacemarkModel
 import org.wit.placemark.console.views.PlacemarkView
 
+
 class PlacemarkController {
+
+var choice : String = ""
+
+
+
 
     fun start()
     {
-        org.wit.placemark.console.main.logger.info { "Launching Placemark Console App" }
+        println("Launching Placemark Console App")
         println("Placemark Kotlin App Version 1.0")
+        println()
 
         var input: Int
 
         do {
             input = org.wit.placemark.console.main.placemarkView.menu()
             when(input) {
-                1 -> controller.add()
-                2 -> controller.update()
-                3 -> org.wit.placemark.console.main.placemarkView.listPlacemarks(org.wit.placemark.console.main.placemarks)
-                4 -> controller.search()
-                -99 -> controller.dummyData()
+                1 -> add()
+                2 -> update()
+                3 -> list()
+                4 -> search()
+                -99 -> dummyData()
                 -1 -> println("Exiting App")
                 else -> println("Invalid Option")
             }
@@ -31,14 +40,13 @@ class PlacemarkController {
         org.wit.placemark.console.main.logger.info { "Shutting Down Placemark Console App" }
     }
 
-    val placemarks = PlacemarkMemStore()
+   // val placemarks = PlacemarkMemStore()
+    val placemarks = PlacemarkJSONStore()
+
     val placemarkView = PlacemarkView()
     val logger = KotlinLogging.logger {}
 
-    init {
-        logger.info { "Launching Placemark Console App" }
-        println("Placemark Kotlin App Version 1.0")
-    }
+
 
     fun menu() :Int { return placemarkView.menu() }
 
@@ -48,7 +56,7 @@ class PlacemarkController {
         if (placemarkView.addPlacemarkData(aPlacemark))
             placemarks.create(aPlacemark)
         else
-            logger.info("Placemark Not Added")
+            println("Placemark Not Added")
     }
 
     fun list() {
@@ -65,10 +73,10 @@ class PlacemarkController {
             if(placemarkView.updatePlacemarkData(aPlacemark)) {
                 placemarks.update(aPlacemark)
                 placemarkView.showPlacemark(aPlacemark)
-                logger.info("Placemark Updated : [ $aPlacemark ]")
+                println("Placemark Updated : [ $aPlacemark ]")
             }
             else
-                logger.info("Placemark Not Updated")
+                println("Placemark Not Updated")
         }
         else
             println("Placemark Not Updated...")
