@@ -2,12 +2,13 @@ package org.wit.placemark.console.main
 
 
 import mu.KotlinLogging
+import org.wit.placemark.console.models.PlacemarkMemStore
 import org.wit.placemark.console.models.PlacemarkModel
 
 private val logger = KotlinLogging.logger {}
 
-var placemark = PlacemarkModel()
-val placemarks = ArrayList<PlacemarkModel>()
+val placemarks = PlacemarkMemStore()
+
 
 
 
@@ -71,7 +72,7 @@ fun menu() : Int {
 fun addPlacemark(){
 
 
-    placemark.id++
+    placemark++
     println("Add a placemark")
     println()
     print("Enter a title: ")
